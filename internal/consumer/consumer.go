@@ -1,13 +1,13 @@
-package internal
+package consumer
 
 import "context"
 
-func Consume[T any](ctx context.Context, stream <-chan T, n int) <-chan T {
+func Run[T any](ctx context.Context, stream <-chan T, count int) <-chan T {
 	consume := make(chan T)
 
 	go func() {
 		defer close(consume)
-		for i := 0; i < n; i++ {
+		for i := 0; i < count; i++ {
 			select {
 			case <-ctx.Done():
 				return
