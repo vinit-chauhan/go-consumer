@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 	"time"
@@ -14,8 +15,8 @@ import (
 const MAX_RANDOM int = 5000000
 
 func main() {
-	done := make(chan bool)
-	defer close(done)
+	ctx := context.Background()
+	defer ctx.Done()
 
 	CPUCount := runtime.NumCPU()
 	rand.Seed(uint64(time.Now().Unix()))
@@ -24,16 +25,16 @@ func main() {
 		return rand.Intn(MAX_RANDOM)
 	}
 
-	numberStream := internal.Generator(done, rNumFetcher)
+	numberStream := internal.Generator(ctx, rNumFetcher)
 	getNumberStream := func() <-chan int {
-		return internal.PrimeFinder(done, numberStream)
+		return internal.PrimeFinder(ctx, numberStream)
 	}
 
-	primeFinderChannels := utils.FanOut(done, getNumberStream, CPUCount)
+	primeFinderChannels := utils.FanOut(ctx, getNumberStream, CPUCount)
 
-	fannedInStream := utils.FanIn(done, primeFinderChannels...)
+	fannedInStream := utils.FanIn(ctx, primeFinderChannels...)
 
-	for random := range internal.Consume(done, fannedInStream, 10) {
+	for random := range internal.Consume(ctx, fannedInStream, 10) {
 		fmt.Println(random)
 	}
 }

@@ -1,12 +1,14 @@
 package internal
 
-func Generator[T any, K any](done <-chan K, fn func() T) <-chan T {
+import "context"
+
+func Generator[T any](ctx context.Context, fn func() T) <-chan T {
 	stream := make(chan T)
 	go func() {
 		defer close(stream)
 		for {
 			select {
-			case <-done:
+			case <-ctx.Done():
 				return
 			case stream <- fn():
 			}

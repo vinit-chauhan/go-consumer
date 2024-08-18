@@ -1,18 +1,19 @@
 package utils
 
 import (
+	"context"
 	"sync"
 )
 
-func FanIn[T any, K int | int64](done <-chan T, channels ...<-chan K) <-chan K {
+func FanIn[T int | int64](ctx context.Context, channels ...<-chan T) <-chan T {
 	var wg sync.WaitGroup
-	fannedInStream := make(chan K)
+	fannedInStream := make(chan T)
 
-	transfer := func(c <-chan K) {
+	transfer := func(c <-chan T) {
 		defer wg.Done()
 		for i := range c {
 			select {
-			case <-done:
+			case <-ctx.Done():
 				return
 			case fannedInStream <- i:
 			}
@@ -32,8 +33,8 @@ func FanIn[T any, K int | int64](done <-chan T, channels ...<-chan K) <-chan K {
 	return fannedInStream
 }
 
-func FanOut[T any, K int | int64](done <-chan T, getStream func() <-chan K, count int) []<-chan K {
-	consumerChans := make([]<-chan K, count)
+func FanOut[T int | int64](ctx context.Context, getStream func() <-chan T, count int) []<-chan T {
+	consumerChans := make([]<-chan T, count)
 	for i := 0; i < count; i++ {
 		consumerChans[i] = getStream()
 	}

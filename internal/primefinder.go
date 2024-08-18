@@ -1,7 +1,9 @@
 package internal
 
-func PrimeFinder[T any, K int | int64](done <-chan T, stream <-chan K) <-chan K {
-	isPrime := func(num K) bool {
+import "context"
+
+func PrimeFinder[T int | int64](ctx context.Context, stream <-chan T) <-chan T {
+	isPrime := func(num T) bool {
 		for i := num - 1; i > 1; i-- {
 			if num%i == 0 {
 				return false
@@ -10,14 +12,14 @@ func PrimeFinder[T any, K int | int64](done <-chan T, stream <-chan K) <-chan K 
 		return true
 	}
 
-	primes := make(chan K)
+	primes := make(chan T)
 
 	go func() {
 		defer close(primes)
 
 		for {
 			select {
-			case <-done:
+			case <-ctx.Done():
 				return
 			case num := <-stream:
 				if isPrime(num) {
