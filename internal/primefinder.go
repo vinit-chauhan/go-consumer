@@ -1,7 +1,7 @@
 package internal
 
-func PrimeFinder(done <-chan bool, randIntStream <-chan int) <-chan int {
-	isPrime := func(num int) bool {
+func PrimeFinder[T any, K int | int64](done <-chan T, stream <-chan K) <-chan K {
+	isPrime := func(num K) bool {
 		for i := num - 1; i > 1; i-- {
 			if num%i == 0 {
 				return false
@@ -10,7 +10,7 @@ func PrimeFinder(done <-chan bool, randIntStream <-chan int) <-chan int {
 		return true
 	}
 
-	primes := make(chan int)
+	primes := make(chan K)
 
 	go func() {
 		defer close(primes)
@@ -19,7 +19,7 @@ func PrimeFinder(done <-chan bool, randIntStream <-chan int) <-chan int {
 			select {
 			case <-done:
 				return
-			case num := <-randIntStream:
+			case num := <-stream:
 				if isPrime(num) {
 					primes <- num
 				}
