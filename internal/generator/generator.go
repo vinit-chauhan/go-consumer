@@ -1,8 +1,13 @@
 package generator
 
-import "context"
+import (
+	"context"
+)
 
 func Run[T any](ctx context.Context, fn func() T) <-chan T {
+
+	// Log.Debug("Starting Generator")
+
 	stream := make(chan T)
 	go func() {
 		defer close(stream)
