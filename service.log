@@ -1,2 +1,6 @@
-1.724186861433189e+09	info	go-consumer/main.go:61	Starting service
-1.724187767051735e+09	info	go-consumer/main.go:64	Starting service
+2024-08-20T19:04:47.627-0400	debug	go-consumer/main.go:36	Setting random seed
+2024-08-20T19:04:47.627-0400	info	go-consumer/main.go:58	Starting service
+2024-08-20T19:04:47.628-0400	debug	go-consumer/main.go:59	Started service with config: types.Config{GoRoutineCount:8, LogLevel:4, Task:0}
+2024-08-20T19:04:47.628-0400	debug	generator/generator.go:11	Starting Generator
+2024-08-20T19:04:47.928-0400	debug	go-consumer/main.go:47	Service timed out
+2024-08-20T19:04:47.930-0400	debug	go-consumer/main.go:62	Received termination signal from os

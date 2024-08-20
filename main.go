@@ -13,7 +13,6 @@ import (
 	"github.com/vinit-chauhan/go-consumer/internal/tasks"
 	"github.com/vinit-chauhan/go-consumer/internal/types"
 	"github.com/vinit-chauhan/go-consumer/utils"
-	"go.uber.org/zap"
 
 	"golang.org/x/exp/rand"
 )
@@ -23,21 +22,18 @@ const MAX_RANDOM int = 5000000
 var (
 	ctx           context.Context
 	config        types.Config
-	Log           *zap.Logger
 	consumeAmount int
 )
 
 func init() {
 	config = types.DefaultConfig()
-	config.WithGoRoutineCount(runtime.NumCPU())
+	config.WithGoRoutineCount(runtime.NumCPU()).WithLogLevel(types.DEBUG)
 
-	var err error
-	Log, err = utils.Logger(config)
-	if err != nil {
+	if err := utils.Init(config); err != nil {
 		panic(err)
 	}
 
-	Log.Debug("Setting random seed")
+	utils.Logger.Debug("Setting random seed")
 	rand.Seed(uint64(time.Now().Unix()))
 
 	var cancel context.CancelFunc
@@ -48,7 +44,7 @@ func init() {
 		t := time.NewTicker(3 * 100 * time.Millisecond)
 		select {
 		case <-t.C:
-			Log.Debug("Service timed out")
+			utils.Logger.Debug("Service timed out")
 			cancel()
 		}
 	}(cancel)
@@ -59,12 +55,11 @@ func init() {
 func main() {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 
-	ctx = context.WithValue(ctx, "logger", Log)
-
-	Log.Info("Starting service")
+	utils.Logger.Info("Starting service")
+	utils.Logger.Debugf("Started service with config: %#v", config)
 
 	defer func() {
-		Log.Debug("Received termination signal from os")
+		utils.Logger.Debug("Received termination signal from os")
 		cancel()
 	}()
 
