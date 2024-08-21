@@ -36,6 +36,7 @@ func FanIn[T int | int64](ctx context.Context, channels ...<-chan T) <-chan T {
 func FanOut[T int | int64](ctx context.Context, getStream func() <-chan T, count int) []<-chan T {
 	consumerChans := make([]<-chan T, count)
 	for i := 0; i < count; i++ {
+		Logger.Debugf("[FanOut] created channel %d for the tasks", i)
 		consumerChans[i] = getStream()
 	}
 	return consumerChans

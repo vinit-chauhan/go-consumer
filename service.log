@@ -1,6 +1,18 @@
-2024-08-20T19:04:47.627-0400	debug	go-consumer/main.go:36	Setting random seed
-2024-08-20T19:04:47.627-0400	info	go-consumer/main.go:58	Starting service
-2024-08-20T19:04:47.628-0400	debug	go-consumer/main.go:59	Started service with config: types.Config{GoRoutineCount:8, LogLevel:4, Task:0}
-2024-08-20T19:04:47.628-0400	debug	generator/generator.go:11	Starting Generator
-2024-08-20T19:04:47.928-0400	debug	go-consumer/main.go:47	Service timed out
-2024-08-20T19:04:47.930-0400	debug	go-consumer/main.go:62	Received termination signal from os
+2024-08-20T19:29:04.641-0400	debug	go-consumer/main.go:36	Setting random seed
+2024-08-20T19:29:04.641-0400	info	go-consumer/main.go:58	[main] starting service
+2024-08-20T19:29:04.641-0400	debug	go-consumer/main.go:59	[main] started service with config: types.Config{GoRoutineCount:8, LogLevel:4, Task:1}
+2024-08-20T19:29:04.641-0400	debug	generator/generator.go:11	Starting Generator
+2024-08-20T19:29:04.641-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 0 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 1 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 2 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 3 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 4 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 5 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 6 for the tasks
+2024-08-20T19:29:04.642-0400	debug	utils/fanning.go:39	[FanOut] created goroutine 7 for the tasks
+2024-08-20T19:29:04.642-0400	debug	consumer/consumer.go:11	[Run] starting consumer
+2024-08-20T19:29:04.942-0400	debug	go-consumer/main.go:47	Service timed out
+2024-08-20T19:29:04.942-0400	debug	tasks/primefinder.go:28	[PrimeFinder] closing goroutine for prime finder
+2024-08-20T19:29:04.944-0400	debug	tasks/primefinder.go:28	[PrimeFinder] closing goroutine for prime finder
+2024-08-20T19:29:04.945-0400	debug	tasks/primefinder.go:28	[PrimeFinder] closing goroutine for prime finder
+2024-08-20T19:29:04.945-0400	debug	consumer/consumer.go:18	[Run] closing consumer

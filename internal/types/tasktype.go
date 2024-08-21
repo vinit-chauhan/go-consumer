@@ -4,7 +4,7 @@ type TaskType int
 
 const (
 	NOOP TaskType = iota
-	PrimeFinder
+	PrimeFinderTask
 )
 
 func (tt TaskType) String() string {

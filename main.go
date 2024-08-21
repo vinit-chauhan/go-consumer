@@ -27,41 +27,41 @@ var (
 
 func init() {
 	config = types.DefaultConfig()
-	config.WithGoRoutineCount(runtime.NumCPU()).WithLogLevel(types.DEBUG)
+	config.WithGoRoutineCount(runtime.NumCPU()).WithLogLevel(types.DEBUG).WithTaskType(types.PrimeFinderTask)
 
 	if err := utils.Init(config); err != nil {
+		utils.Logger.Errorf("[init] encounter error while initializing Logger", err)
 		panic(err)
 	}
 
-	utils.Logger.Debug("Setting random seed")
+	utils.Logger.Debug("[init] setting random seed")
 	rand.Seed(uint64(time.Now().Unix()))
 
 	var cancel context.CancelFunc
 	ctx, cancel = context.WithCancel(context.Background())
 
 	// NOTE: FOR TESTING PURPOSE ONLY
-	go func(cencel context.CancelFunc) {
+	timeoutFunc := func(cancel context.CancelFunc) {
 		t := time.NewTicker(3 * 100 * time.Millisecond)
 		select {
 		case <-t.C:
-			utils.Logger.Debug("Service timed out")
+			utils.Logger.Debug("[init/timeoutFunc] service timed out")
 			cancel()
 		}
-	}(cancel)
+	}
 
-	consumeAmount = 10
+	go timeoutFunc(cancel)
+
+	consumeAmount = 100
 }
 
 func main() {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 
-	utils.Logger.Info("Starting service")
-	utils.Logger.Debugf("Started service with config: %#v", config)
+	utils.Logger.Info("[main] starting service")
+	utils.Logger.Debugf("[main] started service with config: %#v", config)
 
-	defer func() {
-		utils.Logger.Debug("Received termination signal from os")
-		cancel()
-	}()
+	defer cancel()
 
 	rNumFetcher := func() int {
 		return rand.Intn(MAX_RANDOM)
@@ -79,4 +79,5 @@ func main() {
 	for random := range consumer.Run(ctx, fannedInStream, consumeAmount) {
 		fmt.Println(random)
 	}
+
 }
